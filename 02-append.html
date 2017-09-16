@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 - Selection data</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+  <svg width='width: 300px; height: 100px' />
+  <script>
+    const rectWidth = 100
+    const height = 100
+    const data = [80, 50, 75, 20, 38]
+    const svg = window.d3.select('svg')
+
+    svg.selectAll('rect')
+      .data(data)
+      .enter()
+      .append('rect')
+      .attr('x', (d, i) => i * rectWidth)
+      .attr('y', d => height - d)
+      .attr('width', rectWidth)
+      .attr('height', d => d)
+      .attr('fill', 'purple')
+      .attr('stroke', '#fff')
+  </script>
+</body>
+</html>
