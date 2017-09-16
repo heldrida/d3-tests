@@ -1,0 +1,11 @@
+{
+  "name": "d3-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:heldrida/d3-tests.git",
+  "author": "Helder <heldrida@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.15.4"
+  }
+}

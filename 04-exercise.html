@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>D3 - Selection data</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <style>
+    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <svg />
+  <script>
+    const city = 'San Francisco'
+    const width = 800
+    const height = 300
+    const svg = window.d3.select('svg')
+    const margin = {top: 20, bottom: 20, left: 20, right: 20}
+
+    // database of city temperatures accross time
+    window.d3.tsv('data.tsv', (err, data) => {
+      // clean and prepare the data
+      data.forEach(d => {
+        d.date = window.d3.timeParse('%Y%m%d')(d.date)
+        d.date = new Date(d.date) // x
+        d[city] = Number(d[city]) // y
+      })
+      // scales
+      // get the min and max value
+      const xExtent = window.d3.extent(data, d => d.date)
+      const xScale = window.d3.scaleTime()
+        .domain(xExtent)
+        .range([margin.left, width - margin.right])
+      const yMax = window.d3.max(data, d => d[city])
+      const yScale = window.d3.scaleLinear()
+        .domain([0, yMax])
+        .range([height - margin.bottom, margin.top])
+      const heightScale = window.d3.scaleLinear()
+        .domain([0, yMax])
+        .range([0, height - margin.top - margin.bottom])
+      const svg = window.d3.select('svg')
+      const rect = svg.selectAll('rect')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('width', 2)
+        .attr('height', (d) => heightScale(d[city]) || 0)
+        .attr('x', (d) => xScale(d.date))
+        .attr('y', (d) => yScale(d[city]) || 0)
+        .attr('fill', 'blue')
+        .attr('stroke', 'white')
+      const xAxis = window.d3.axisBottom()
+        .scale(xScale)
+        .tickFormat(window.d3.timeFormat('%b %Y'))
+      const yAxis = window.d3.axisLeft()
+        .scale(yScale)
+      svg.append('g')
+        .attr('transform', 'translate(' + [0, height - margin.bottom] + ')')
+        .call(xAxis)
+      svg.append('g')
+        .attr('transform', 'translate(' + [margin.left, 0] + ')')
+        .call(yAxis)
+    })
+  </script>
+</body>
+</html>
